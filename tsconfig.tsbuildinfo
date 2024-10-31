@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/interfaces/user/index.ts","./src/plugins/redux/actions/user/index.ts","./src/plugins/redux/actions/user/interfaces.ts","./src/plugins/redux/reducers/index.ts","./src/plugins/redux/reducers/userreducer.ts","./src/plugins/redux/store/index.ts","./vite.config.ts"],"errors":true,"version":"5.6.3"}

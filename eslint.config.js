@@ -1,33 +1,34 @@
-import js from "@eslint/js";
-import globals from "globals";
-import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
-import tseslint from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
+import js from "@eslint/js"
+import globals from "globals"
+import reactHooks from "eslint-plugin-react-hooks"
+import reactRefresh from "eslint-plugin-react-refresh"
+import tseslintPlugin from "@typescript-eslint/eslint-plugin";
+import tseslint from "typescript-eslint";
 import prettier from "eslint-plugin-prettier";
 import importPlugin from "eslint-plugin-import";
+import airbnbBase from "eslint-config-airbnb-base";
 
-export default [
+export default tseslint.config(
+  { ignores: ["dist", "postcss.config.js"] },
   {
-    ignores: ["dist"],
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommended
+    ],
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
-      ecmaVersion: 2021,
-      sourceType: "module",
+      ecmaVersion: 2020,
       globals: globals.browser,
-      parser: tsParser,
-      parserOptions: {
-        project: "./tsconfig.json",
-      },
     },
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      "@typescript-eslint": tseslint,
+      "@typescript-eslint": tseslintPlugin,
       prettier,
       import: importPlugin,
     },
     rules: {
+      ...reactHooks.configs.recommended.rules,
       "no-case-declarations": "off",
       "default-param-last": "off",
       "import/prefer-default-export": "off",
@@ -38,33 +39,18 @@ export default [
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-inferrable-types": "error",
-      indent: ["error", 2],
-      semi: ["error", "always"],
-      quotes: ["error", "double"],
-      camelcase: "off",
+      "indent": ["error", 2],
+      "semi": ["error", "always"],
+      "quotes": ["error", "double"],
+      "camelcase": "off",
       "import/no-extraneous-dependencies": "off",
       "no-param-reassign": "off",
       "prettier/prettier": "off",
       "no-nested-ternary": "off",
-
-      // React hooks and refresh rules
-      ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
       ],
     },
-    settings: {
-      "import/resolver": {
-        node: {
-          extensions: [".js", ".jsx", ".ts", ".tsx"],
-        },
-      },
-    },
-    extends: [
-      js.configs.recommended,
-      "plugin:@typescript-eslint/recommended",
-      "plugin:prettier/recommended",
-    ],
   },
-];
+)
