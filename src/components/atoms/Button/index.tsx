@@ -15,6 +15,7 @@ const Button: React.FC<ButtonProps> = ({
     "rounded-md font-medium transition",
     "focus:outline-none focus:ring-2 focus:ring-opacity-50 hover:opacity-90",
     "flex items-center justify-center gap-2",
+    "[&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 disabled:opacity-70 disabled:cursor-not-allowed",
     full ? "w-full" : "",
     className,
   ];
