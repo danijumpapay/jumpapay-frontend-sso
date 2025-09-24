@@ -27,7 +27,7 @@ export default {
       },
       colors: {
         primary: {
-          DEFAULT: "#FF8B13",
+          DEFAULT: "#69C5EB",
           50: "#FFF4E9",
           100: "#FFE5CC",
           200: "#FFCB99",

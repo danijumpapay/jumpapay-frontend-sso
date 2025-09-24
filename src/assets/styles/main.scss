@@ -5,3 +5,9 @@
 body {
     background-color: rgb(242, 244, 247)
 }
+
+@media print{
+    #no-print{
+      display: none;
+    }
+}

@@ -7,7 +7,7 @@ export const authApi = createApi({
     endpoints: (builder) => ({
         authLoginWithUser: builder.mutation<any, BodyParam<AuthLoginWithUserForm>>({
             query: ({body}) => ({
-                url: `/login/account`,
+                url: `/login/sso`,
                 method: "POST",
                 body
             })

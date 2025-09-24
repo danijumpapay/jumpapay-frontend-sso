@@ -1,6 +1,8 @@
 type AuthLoginWithUserForm = {
   user: string;
   password: string;
+  client_id: string;
+  return_to: string;
 };
 
 type AuthLoginWithWhatsappForm = {

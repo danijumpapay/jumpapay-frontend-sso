@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { useSearchParams } from "react-router-dom";
 // Formik
 import { Field, Form, Formik } from "formik";
 
@@ -22,18 +22,31 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "@/plugins/redux/reducers/userReducer";
+import { decryptReturnTo } from "@/utils/decrypt";
 
 const FormSignin: React.FC = () => {
   const dispatch = useAppDispatch();
+  const params = useSearchParams()[0];
   const { authLoginWithUser, isLoadingAuthLoginWithUser } = useAuth();
   const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmitLogin = async (formData: AuthLoginWithUserForm) => {
     try {
+      // append additional data from query params
+      formData.client_id = params.get("client_id") || "";
+      const returnTo = params.get("return_to") || "";
+      formData.return_to = returnTo.replace(/ /g, '+');
+      // process hit login
       const loginResponse = await authLoginWithUser({
         body: formData,
       }).unwrap();
       const results = loginResponse.results;
+      // redirect to return_to if exists
+      const decryptedReturnTo = decryptReturnTo(formData.return_to);
+      if (decryptedReturnTo) {
+        window.location.href = decryptedReturnTo;
+        return;
+      }
       dispatch(setAccessToken(results.token));
       dispatch(setRefreshToken(results.refreshToken));
     } catch (error) {
@@ -49,6 +62,8 @@ const FormSignin: React.FC = () => {
   const initialValues = {
     user: "",
     password: "",
+    client_id: "",
+    return_to: ""
   };
 
   const validationSchema = Yup.object().shape({
