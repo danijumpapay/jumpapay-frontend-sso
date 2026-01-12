@@ -25,8 +25,8 @@ const AuthTemplate: React.FC<AuthTemplateProps> = ({
          
         </div>
         <small className="text-gray-600 justify-center flex p-3">
-            © 2024 PT Practell Asia Amanah
-          </small>
+          © 2026 JumpaPay
+        </small>
       </div>
     </>
   );
