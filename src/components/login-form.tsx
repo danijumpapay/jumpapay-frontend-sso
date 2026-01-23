@@ -14,9 +14,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff } from "lucide-react"
 import { loginSchema, type LoginFormValues } from "@/lib/validations/auth"
-import { apiClient, CLIENT_ID } from "@/lib/api"
-import { setAccessToken } from "@/services/auth-token"
-import { clients, type SSOClient } from "@/services/sso-clients"
+import { apiClient } from "@/lib/api"
+import { getSSOParams } from "@/lib/sso"
 import { toast } from "sonner"
 import axios, { AxiosError } from "axios"
 
@@ -29,20 +28,27 @@ interface LoginResponse {
   success: boolean
   message: string
   results: {
-    accessToken: string
     user: {
-      name: string
-      [key: string]: unknown
+      id: string;
+      name: string;
+      role: string;
+      username: string;
+      phone: string;
+    },
+    auth: {
+      code: string;
+      redirectUri: string;
     }
   }
 }
 
-export function LoginForm({
+export const LoginForm = ({
   className,
   onNavigateToSignup,
   onNavigateToForgot,
   ...props
-}: LoginFormProps) {
+}: LoginFormProps) => {
+  const sso = getSSOParams();
   const [showPassword, setShowPassword] = React.useState(false)
 
   const {
@@ -58,22 +64,20 @@ export function LoginForm({
       const response = await apiClient.post<LoginResponse>("/auth/login/internal", {
         user: data.username,
         password: data.password,
-        clientId: CLIENT_ID,
-        returnTo: "",
+        clientId: sso.clientId,
+        redirectUri: sso.redirectUri,
+        state: sso.state
       })
 
       const { success, results, message } = response.data
 
-      if (success && results.accessToken) {
-        setAccessToken(results.accessToken)
+      if (success && results.auth.code) {
         toast.success(`Welcome back, ${results.user.name}!`)
-
-        const targetClient = clients.find((c: SSOClient) => c.id === CLIENT_ID)
-        const redirectUri = targetClient?.redirect_uris[0]
+        const redirectUri = results.auth.redirectUri;
 
         if (redirectUri) {
           setTimeout(() => {
-            window.location.href = `${redirectUri}?token=${results.accessToken}`
+            window.location.href = `${redirectUri}?code=${results.auth.code}&clientId=${sso.clientId}&state=${sso.state}`
           }, 1000)
         }
       } else {

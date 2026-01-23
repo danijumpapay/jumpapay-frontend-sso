@@ -7,14 +7,14 @@ export interface SSOClient {
 
 export const clients: SSOClient[] = [
   {
-    id: import.meta.env.VITE_CLIENT_ID,
-    name: "Dashboard JumpaPay",
+    id: "kH9X3vKwLm7YEQzR",
+    name: "JumpaPay",
     horizontal_logo: "https://jumpapay.com/assets/images/logo.png",
     redirect_uris: ["https://dashboard.jumpapay.com/sso-callback"]
   },
   {
     id: "okl9vk0o6zkr41fc",
-    name: "Gamaloka Dashboard",
+    name: "Gamaloka",
     horizontal_logo: "https://gamaloka.com/wp-content/uploads/2023/12/gamaloka-1800x4001-1-200x44.png",
     redirect_uris: ["https://dashboard.gamaloka.com/sso-callback"]
   },
