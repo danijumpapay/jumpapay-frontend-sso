@@ -1,21 +1,17 @@
 FROM node:20-slim AS builder
 WORKDIR /app
 
-RUN npm install -g pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-COPY package.json pnpm-lock.yaml ./
-ENV PNPM_APPROVE_BUILD_SCRIPTS=true
-RUN pnpm install --frozen-lockfile
+COPY package.json pnpm-lock.yaml* ./
+
+RUN pnpm install
 
 COPY . .
+
 RUN pnpm build
 
-FROM docker.io/library/nginx:stable-alpine as runner
-
-RUN rm /etc/nginx/conf.d/default.conf
-
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
+FROM docker.io/library/nginx:stable-alpine AS runner
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 5010
